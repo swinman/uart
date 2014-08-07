@@ -4,7 +4,7 @@ Version=Lattice Semiconductor Corporation iCEcube - Release: 2014.04.25832 - Bui
 ProjectName=uart
 Vendor=SiliconBlue
 Synthesis=synplify
-ProjectVFiles=../source/loopback.vhd=work,../source/top.vhd=work,../source/uart.vhd=work,../source/pll_12x48.vhd
+ProjectVFiles=../source/loopback.vhd=work,../source/top.vhd=work,../source/uart.vhd=work,../source/pll_12x48.vhd=work
 ProjectCFiles=
 CurImplementation=uart_impl
 Implementations=uart_impl
@@ -64,13 +64,13 @@ DevicePower=
 NetlistFile=uart_impl/uart.edf
 AdditionalEDIFFile=
 IPEDIFFile=
-DesignLib=uart_impl/sbt/netlist/oadb-TOP
+DesignLib=uart_impl/sbt/netlist/oadb-top
 DesignView=_rt
-DesignCell=TOP
+DesignCell=top
 SynthesisSDCFile=uart_impl/uart.scf
 UserPinConstraintFile=
 UserSDCFile=
-PhysicalConstraintFile=../source/pin_constraints.pcf
+PhysicalConstraintFile=
 BackendImplPathName=
 Devicevoltage=1.14
 DevicevoltagePerformance=+/-5%(datasheet default)

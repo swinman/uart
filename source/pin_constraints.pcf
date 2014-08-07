@@ -1,0 +1,27 @@
+# ##############################################################################
+# iCEcube PCF
+# Version:            2012.09SP1.22498
+# File Generated:     May 1 2013 11:36:30
+# Family & Device:    iCE40HX1K
+# Package:            TQ144
+# ##############################################################################
+
+### IOSet List
+
+set_io  CLOCK_i         21
+set_io  RESET_i         119
+
+set_io  RS232_RXD_i     9
+set_io  RS232_TXD_o     8
+
+set_io  RS232_DTR_i     3
+set_io  RS232_RTS_i     7
+set_io  RS232_DCD_o     1
+set_io  RS232_DSR_o     2
+set_io  RS232_CTS_o     4
+
+set_io LED0     95
+#set_io LED1     96
+#set_io LED2     97
+#set_io LED3     98
+#set_io LED4     99

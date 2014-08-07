@@ -15,7 +15,9 @@ entity TOP is
         RS232_RTS_i     : in  std_logic;
         RS232_DCD_o     : out std_logic;
         RS232_DSR_o     : out std_logic;
-        RS232_CTS_o     : out std_logic
+        RS232_CTS_o     : out std_logic;
+
+        LED0            : OUT std_logic
     );
 end TOP;
 
@@ -59,6 +61,9 @@ architecture RTL of TOP is
     ----------------------------------------------------------------------------
 
     signal clock, tx, rx, rx_sync, reset, reset_sync : std_logic;
+    signal count : UNSIGNED (15 DOWNTO 0);
+
+    signal led_pr, led_nx : std_logic;
 
 begin
 
@@ -98,5 +103,29 @@ begin
     RS232_DCD_o <= '0';
     RS232_DSR_o <= '1';
     RS232_CTS_o <= '1';
+
+    counter_process:
+    process( RESET_i, clock )
+    begin
+        if( RESET_i = '0' ) then
+            count <= (OTHERS => '0');
+            led_pr <= '0';
+        elsif( clock'EVENT and clock = '1' ) then
+            count <= count + 1;
+            led_pr <= led_nx;
+        end if;
+    end process;
+
+    led_flash_process:
+    process( count )
+    begin
+        if( count = (count'range => '0') ) then
+            led_nx <= NOT led_pr;
+        ELSE
+            led_nx <= led_pr;
+        end if;
+    end process;
+
+    LED0 <= led_pr;
 
 end RTL;
