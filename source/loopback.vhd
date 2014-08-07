@@ -1,10 +1,10 @@
 --------------------------------------------------------------------------------
 -- UART
 -- Simple loopback
---           
+--
 -- @author         Peter A Bennett
 -- @copyright      (c) 2012 Peter A Bennett
--- @license        LGPL      
+-- @license        LGPL
 -- @email          pab850@googlemail.com
 -- @contact        www.bytebash.com
 --
@@ -15,11 +15,11 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity LOOPBACK is
-    port 
-    (  
+    port
+    (
         -- General
         CLOCK                   :   in      std_logic;
-        RESET                   :   in      std_logic;    
+        RESET                   :   in      std_logic;
         RX                      :   in      std_logic;
         TX                      :   out     std_logic
     );
@@ -29,10 +29,10 @@ architecture RTL of LOOPBACK is
     ----------------------------------------------------------------------------
     -- UART constants
     ----------------------------------------------------------------------------
-    
+
     constant BAUD_RATE              : positive := 115200;
-    constant CLOCK_FREQUENCY        : positive := 100000000;
-    
+    constant CLOCK_FREQUENCY        : positive := 48_000_000;
+
     ----------------------------------------------------------------------------
     -- Component declarations
     ----------------------------------------------------------------------------
@@ -43,7 +43,7 @@ architecture RTL of LOOPBACK is
             );
         port (  -- General
                 CLOCK               :   in      std_logic;
-                RESET               :   in      std_logic;    
+                RESET               :   in      std_logic;
                 DATA_STREAM_IN      :   in      std_logic_vector(7 downto 0);
                 DATA_STREAM_IN_STB  :   in      std_logic;
                 DATA_STREAM_IN_ACK  :   out     std_logic;
@@ -54,18 +54,18 @@ architecture RTL of LOOPBACK is
                 RX                  :   in      std_logic
              );
     end component UART;
-    
+
     ----------------------------------------------------------------------------
     -- UART signals
     ----------------------------------------------------------------------------
-    
+
     signal uart_data_in             : std_logic_vector(7 downto 0);
     signal uart_data_out            : std_logic_vector(7 downto 0);
     signal uart_data_in_stb         : std_logic;
     signal uart_data_in_ack         : std_logic;
     signal uart_data_out_stb        : std_logic;
     signal uart_data_out_ack        : std_logic;
-  
+
 begin
 
     ----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ begin
             BAUD_RATE           => BAUD_RATE,
             CLOCK_FREQUENCY     => CLOCK_FREQUENCY
     )
-    port map    (  
+    port map    (
             -- General
             CLOCK               => CLOCK,
             RESET               => RESET,
@@ -90,11 +90,11 @@ begin
             TX                  => TX,
             RX                  => RX
     );
-    
+
     ----------------------------------------------------------------------------
     -- Simple loopback, retransmit any received data
     ----------------------------------------------------------------------------
-    
+
     UART_LOOPBACK : process (CLOCK)
     begin
         if rising_edge(CLOCK) then
@@ -111,7 +111,7 @@ begin
                     uart_data_in_stb    <= '1';
                     uart_data_in        <= uart_data_out;
                 end if;
-                
+
                 -- Clear transmission request strobe upon acknowledge.
                 if uart_data_in_ack = '1' then
                     uart_data_in_stb    <= '0';
@@ -119,5 +119,5 @@ begin
             end if;
         end if;
     end process;
-            
+
 end RTL;
