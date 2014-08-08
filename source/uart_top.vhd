@@ -17,7 +17,11 @@ entity uart_top is
         RS232_DSR_o     : out std_logic;
         RS232_CTS_o     : out std_logic;
 
-        LED0            : OUT std_logic
+        LED_CNTR        : OUT std_logic;
+        LED_LEFT        : OUT std_logic;
+        LED2            : OUT std_logic;
+        LED3            : OUT std_logic;
+        LED4            : OUT std_logic
     );
 end uart_top;
 
@@ -61,17 +65,27 @@ architecture RTL of uart_top is
     ----------------------------------------------------------------------------
 
     signal clock, tx, rx, rx_sync, reset, reset_sync : std_logic;
-    signal count : UNSIGNED (15 DOWNTO 0);
 
+    signal count_pr, count_nx : UNSIGNED (31 DOWNTO 0);
     signal led_pr, led_nx : std_logic;
+
+    constant USE_PLL : natural := 1;
+    constant CK_FREQ    : natural := 48000000;
 
 begin
 
+    no_pll_gen:     -- without the PLL
+    if USE_PLL /= 1 generate
+        clock <= CLOCK_i;
+    end generate;
 
-    pll_inst : pll_12x48
-    port map (
-            i_clk => CLOCK_i,
-            o_clk => clock );
+    use_pll_gen:    -- with the PLL
+    if USE_PLL = 1 generate
+        pll_inst : pll_12x48
+        port map (
+                i_clk => CLOCK_i,
+                o_clk => clock );
+    end generate;
 
     ----------------------------------------------------------------------------
     -- Loopback instantiation
@@ -108,24 +122,28 @@ begin
     process( RESET_i, clock )
     begin
         if( RESET_i = '0' ) then
-            count <= (OTHERS => '0');
+            count_pr <= (OTHERS => '0');
             led_pr <= '0';
         elsif( clock'EVENT and clock = '1' ) then
-            count <= count + 1;
+            count_pr <= count_nx;
             led_pr <= led_nx;
         end if;
     end process;
 
-    led_flash_process:
-    process( count )
-    begin
-        if( count = (count'range => '0') ) then
-            led_nx <= NOT led_pr;
-        ELSE
-            led_nx <= led_pr;
-        end if;
-    end process;
+    led_nx <= not led_pr when count_pr = ( count_pr'range => '0' ) else
+              led_pr;
 
-    LED0 <= led_pr;
+    count_nx <= (OTHERS => '0') when
+                count_pr = to_unsigned(CK_FREQ, count_pr'length) else
+                count_pr + 1;
+
+    LED_CNTR <= led_pr;
+    LED_LEFT <= not led_pr;
+
+    LED2 <= '0' when count_nx < to_unsigned(CK_FREQ/2, count_pr'length) else
+            '1';
+
+    LED3 <= '0';
+    LED4 <= '0';
 
 end RTL;

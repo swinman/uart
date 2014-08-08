@@ -100,10 +100,13 @@ ARCHITECTURE pll_ver_lattcie OF pll_12x48 IS
   SIGNAL pll_glob_out   : STD_LOGIC;
   SIGNAL pll_bypass     : STD_LOGIC;
   SIGNAL pll_lock       : STD_LOGIC;
+  SIGNAL clock          : STD_LOGIC;
 
 BEGIN
 
   pll_bypass <= NOT pll_lock;
+  --pll_bypass <= '0';
+  --pll_bypass <= '1';
 
   pll_lattice_inst : SB_PLL40_CORE
   --pll_lattice_inst : SB_PLL40_PAD
@@ -121,15 +124,20 @@ BEGIN
       PLLOUT_SELECT => "GENCLK",
       ENABLE_ICEGATE => '0' )
     PORT MAP ( PLLOUTGLOBAL     => pll_glob_out,
-               REFERENCECLK     => i_clk,
-               --PACKAGEPIN       => i_clk,
+               REFERENCECLK     => clock,
+               --PACKAGEPIN       => clock,
                LOCK             => pll_lock,
                BYPASS           => pll_bypass,
                RESETB           => '1' );
 
-  lattice_glob_buf_inst : SB_GB
+  lattice_glob_buf_out_inst : SB_GB
     PORT MAP (  USER_SIGNAL_TO_GLOBAL_BUFFER    => pll_glob_out,
                 GLOBAL_BUFFER_OUTPUT            => o_clk );
+
+  lattice_glob_buf_in_inst : SB_GB
+    PORT MAP (  USER_SIGNAL_TO_GLOBAL_BUFFER    => i_clk,
+                GLOBAL_BUFFER_OUTPUT            => clock );
+
 
 END ARCHITECTURE pll_ver_lattcie;
 -------------------------------------------------------------------------------

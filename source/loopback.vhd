@@ -31,7 +31,7 @@ architecture RTL of LOOPBACK is
     ----------------------------------------------------------------------------
 
     constant BAUD_RATE              : positive := 115200;
-    constant CLOCK_FREQUENCY        : positive := 48_000_000;
+    constant CLOCK_FREQUENCY        : positive := 48000000;
 
     ----------------------------------------------------------------------------
     -- Component declarations
