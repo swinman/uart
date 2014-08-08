@@ -22,6 +22,6 @@ set_io  RS232_CTS_o     4
 
 set_io LED_CNTR         95
 set_io LED_LEFT         96
-set_io LED2     97
-set_io LED3     98
-set_io LED4     99
+set_io LED_BOT          97
+set_io LED_RITE         98
+set_io LED_TOP          99

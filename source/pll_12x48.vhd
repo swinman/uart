@@ -104,8 +104,8 @@ ARCHITECTURE pll_ver_lattcie OF pll_12x48 IS
 
 BEGIN
 
-  pll_bypass <= NOT pll_lock;
-  --pll_bypass <= '0';
+  --pll_bypass <= NOT pll_lock;
+  pll_bypass <= '0';
   --pll_bypass <= '1';
 
   pll_lattice_inst : SB_PLL40_CORE
@@ -113,7 +113,7 @@ BEGIN
     GENERIC MAP (
       DIVR          => "0000",
       DIVF          => "01111111",
-      DIVQ          => "100",
+      DIVQ          => "101",
       FILTER_RANGE  => "001",
       FEEDBACK_PATH => "SIMPLE",
       DELAY_ADJUSTMENT_MODE_FEEDBACK => "FIXED",
@@ -148,5 +148,45 @@ END ARCHITECTURE pll_ver_lattcie;
 --  FOR pll_ver_lattcie
 --  END FOR;
 --END CONFIGURATION pll_config;
+
+
+-- use PACKAGEPIN and SB_PLL40_PAD instead of REFERENCECLK and SB_PLL40_CORE
+  -- to select GBIN0 (129 BANK0) or GBIN5 (49, BANK2) as PLL input */
+
+-- To initialize the simulation properly, the RESET signal (Active Low) must
+  -- be asserted at the beginning of the simulation */
+
+-- PLLOUTGLOBAL has optimal connections to global clock buffers GBUF4 and
+  -- GBUF5 ( see 17-4 in iCE40 sysCLOCK PLL Design and Usage ) */
+
+-- PLL_IN 12 MHz       ( want 10 to 133 MHz )
+  -- PLL VCO Frequency   ( want 533 to 1066 MHz )
+  -- PLL_OUT             ( want 16 to 275 MHz )
+  --
+  -- DIVR : REFERENCECLK divider
+  -- DIVF : Feedback divider
+  -- DIVQ : VCO divider
+  --   f_VCO = f_IN x ( DIVF + 1 ) / ( DIVR + 1 )
+  --     12 MHz * 80 = 960 MHz
+  --     12 MHz * 64 = 768 MHz
+  --
+  -- FEEDBACK_PATH = SIMPLE
+  --   f_OUT = f_VCO / 2**DIVQ
+  --
+  -- FEEDBACK_PATH != SIMPLE
+  --   f_OUT = f_VCO;
+  --
+  -- 240 MHz : DIVF = 7'b1001111 (0x4F, 79); DIVQ = 3'b010 (2**2 = 4);
+  -- 120 MHz : DIVF = 7'b1001111 (0x4F, 79); DIVQ = 3'b011 (2**3 = 8);
+  --  48 MHz : DIVF = 7'b0111111 (0x3F, 63); DIVQ = 3'b100 (2**4 = 16);
+  --  24 MHz : DIVF = 7'b0111111 (0x3F, 63); DIVQ = 3'b101 (2**5 = 32);
+  --
+  --
+
+-- NOTE: when the pll gui was run on acer ubuntu the PLL result for DIVQ was
+  -- always one lower than would be expected (and what is returned from earlier
+  -- runs) */
+
+
 
 -- vim: shiftwidth=2

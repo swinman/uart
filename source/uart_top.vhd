@@ -19,9 +19,9 @@ entity uart_top is
 
         LED_CNTR        : OUT std_logic;
         LED_LEFT        : OUT std_logic;
-        LED2            : OUT std_logic;
-        LED3            : OUT std_logic;
-        LED4            : OUT std_logic
+        LED_BOT         : OUT std_logic;
+        LED_RITE        : OUT std_logic;
+        LED_TOP         : OUT std_logic
     );
 end uart_top;
 
@@ -45,8 +45,13 @@ architecture RTL of uart_top is
     ----------------------------------------------------------------------------
 
     component LOOPBACK is
-        port
-        (
+        generic (
+                --BAUD_RATE           : positive := 115200;
+                BAUD_RATE           : positive := 57600;
+                -- Input Clock frequency in Hz
+                CLOCK_FREQUENCY     : positive := 12000000
+            );
+        port (
             -- General
             CLOCK                   :   in      std_logic;
             RESET                   :   in      std_logic;
@@ -69,7 +74,7 @@ architecture RTL of uart_top is
     signal count_pr, count_nx : UNSIGNED (31 DOWNTO 0);
     signal led_pr, led_nx : std_logic;
 
-    constant USE_PLL : natural := 1;
+    constant USE_PLL    : natural := 1;
     constant CK_FREQ    : natural := 48000000;
 
 begin
@@ -92,6 +97,9 @@ begin
     ----------------------------------------------------------------------------
 
     LOOPBACK_inst1 : LOOPBACK
+    generic map (
+                BAUD_RATE           => 57600,
+                CLOCK_FREQUENCY     => CK_FREQ )
     port map    (
             -- General
             CLOCK       => clock,
@@ -140,10 +148,12 @@ begin
     LED_CNTR <= led_pr;
     LED_LEFT <= not led_pr;
 
-    LED2 <= '0' when count_nx < to_unsigned(CK_FREQ/2, count_pr'length) else
-            '1';
+    LED_BOT <= '0' when count_nx < to_unsigned(CK_FREQ/2, count_pr'length) else
+               '1';
 
-    LED3 <= '0';
-    LED4 <= '0';
+    LED_RITE <= '0' when count_nx < to_unsigned(CK_FREQ/4, count_nx'length) else
+                '1';
+
+    LED_TOP <= LED_RITE XOR LED_BOT XOR LED_LEFT;
 
 end RTL;

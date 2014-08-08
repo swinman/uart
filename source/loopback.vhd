@@ -15,8 +15,13 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity LOOPBACK is
-    port
-    (
+    generic (
+            --BAUD_RATE           : positive := 115200;
+            BAUD_RATE           : positive := 57600;
+            -- Input Clock frequency in Hz
+            CLOCK_FREQUENCY     : positive := 12000000
+        );
+    port (
         -- General
         CLOCK                   :   in      std_logic;
         RESET                   :   in      std_logic;
@@ -26,13 +31,6 @@ entity LOOPBACK is
 end LOOPBACK;
 
 architecture RTL of LOOPBACK is
-    ----------------------------------------------------------------------------
-    -- UART constants
-    ----------------------------------------------------------------------------
-
-    constant BAUD_RATE              : positive := 115200;
-    constant CLOCK_FREQUENCY        : positive := 48000000;
-
     ----------------------------------------------------------------------------
     -- Component declarations
     ----------------------------------------------------------------------------
