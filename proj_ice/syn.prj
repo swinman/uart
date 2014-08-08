@@ -3,7 +3,7 @@
 #project files
 
 add_file -vhdl -lib work "../source/loopback.vhd"
-add_file -vhdl -lib work "../source/top.vhd"
+add_file -vhdl -lib work "../source/uart_top.vhd"
 add_file -vhdl -lib work "../source/uart.vhd"
 add_file -vhdl -lib work "../source/pll_12x48.vhd"
 #implementation: "uart_impl"
@@ -21,6 +21,8 @@ set_option -speed_grade
 set_option -part_companion ""
 
 #compilation/mapping options
+set_option -top_module "uart_top"
+
 
 # mapper_options
 set_option -frequency auto

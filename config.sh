@@ -11,6 +11,7 @@ export ICEDIR=$toolsdir/lscc/iCEcube2.2014.04
 export LD_LIBRARY_PATH=
 export LD_LIBRARY_PATH=$ICEDIR/LSE:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$ICEDIR/LSE/bin/lin:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$ICEDIR/sbt_backend/lib/linux/opt:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$ICEDIR/sbt_backend/bin/linux/opt/synpwrap:$LD_LIBRARY_PATH
 
 export FOUNDRY=$ICEDIR/LSE
@@ -22,6 +23,9 @@ export PATH=$PATH:$DIAMOND_DIR/bin/lin64:$DIAMOND_DIR/ispfpga/bin/lin64
 
 alias synpwrap=$ICEDIR/sbt_backend/bin/linux/opt/synpwrap/synpwrap
 alias synthesis=$ICEDIR/LSE/bin/lin/synthesis
+alias sbrouter=$ICEDIR/sbt_backend/bin/linux/opt/sbrouter
+alias edifparser=$ICEDIR/sbt_backend/bin/linux/opt/edifparser
+alias sbtplacer=$ICEDIR/sbt_backend/bin/linux/opt/sbtplacer
 
 #TAGHL=~/vimfiles/bundle/taghighlight/plugin/TagHighlight/TagHighlight.py
 TAGHL=~/.vim/bundle/taghighlight/plugin/TagHighlight/TagHighlight.py

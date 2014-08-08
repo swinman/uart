@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity TOP is
+entity uart_top is
     PORT (
         CLOCK_i         : in  std_logic;
         RESET_i         : in  std_logic;
@@ -19,7 +19,7 @@ entity TOP is
 
         LED0            : OUT std_logic
     );
-end TOP;
+end uart_top;
 
 -- ABBR  Name, Typical purpose
 -- DTR : Data Terminal Ready, Indicates presence of DTE to DCE
@@ -34,7 +34,7 @@ end TOP;
 -- PG  : Protective Ground
 
 
-architecture RTL of TOP is
+architecture RTL of uart_top is
 
     ----------------------------------------------------------------------------
     -- Component declarations
