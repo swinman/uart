@@ -27,3 +27,5 @@
 /synthesis/*.csv
 /synthesis/xlnx_auto_0_xdb
 /synthesis/_xmsgs
+proj_ice/uart_impl/*
+synlog.tcl
