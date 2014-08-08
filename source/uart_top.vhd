@@ -6,7 +6,7 @@ use ieee.numeric_std.all;
 entity uart_top is
     PORT (
         CLOCK_i         : in  std_logic;
-        RESET_i         : in  std_logic;
+        RESET_ni        : in  std_logic;
 
         RS232_RXD_i     : in  std_logic;
         RS232_TXD_o     : out std_logic;
@@ -97,13 +97,12 @@ begin
     ----------------------------------------------------------------------------
 
     LOOPBACK_inst1 : LOOPBACK
-    generic map (
-                BAUD_RATE           => 57600,
-                CLOCK_FREQUENCY     => CK_FREQ )
+    generic map ( BAUD_RATE           => 57600,
+                  CLOCK_FREQUENCY     => CK_FREQ )
     port map    (
             -- General
             CLOCK       => clock,
-            RESET       => reset,
+            RESET       => not reset,
             RX          => rx,
             TX          => tx );
 
@@ -116,7 +115,7 @@ begin
         if rising_edge(clock) then
             rx_sync         <= RS232_RXD_i;
             rx              <= rx_sync;
-            reset_sync      <= RESET_i;
+            reset_sync      <= RESET_ni OR '1';
             reset           <= reset_sync;
             RS232_TXD_o     <= tx;
         end if;
@@ -127,9 +126,9 @@ begin
     RS232_CTS_o <= '1';
 
     counter_process:
-    process( RESET_i, clock )
+    process( reset, clock )
     begin
-        if( RESET_i = '0' ) then
+        if( reset = '0' ) then
             count_pr <= (OTHERS => '0');
             led_pr <= '0';
         elsif( clock'EVENT and clock = '1' ) then
@@ -145,15 +144,13 @@ begin
                 count_pr = to_unsigned(CK_FREQ, count_pr'length) else
                 count_pr + 1;
 
-    LED_CNTR <= led_pr;
-    LED_LEFT <= not led_pr;
+    LED_BOT <= not tx;
+    LED_TOP <= not rx_sync;
 
-    LED_BOT <= '0' when count_nx < to_unsigned(CK_FREQ/2, count_pr'length) else
-               '1';
-
-    LED_RITE <= '0' when count_nx < to_unsigned(CK_FREQ/4, count_nx'length) else
+    LED_RITE <= led_pr;
+    LED_LEFT <= '0' when count_nx < to_unsigned(CK_FREQ/4, count_nx'length) else
                 '1';
+    LED_CNTR <= LED_RITE XOR LED_LEFT;
 
-    LED_TOP <= LED_RITE XOR LED_BOT XOR LED_LEFT;
 
 end RTL;

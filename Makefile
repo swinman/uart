@@ -10,6 +10,7 @@ syn:
 	tclsh proj_ice/icecube_flow.tcl
 
 all:
+	@sudo echo BEGIN
 	$(ICEDIR)/sbt_backend/bin/linux/opt/synpwrap/synpwrap \
 	    -prj proj_ice/syn.prj
 	tclsh proj_ice/icecube_flow.tcl
